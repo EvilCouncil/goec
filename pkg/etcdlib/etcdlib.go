@@ -44,9 +44,17 @@ func (ea *EtcdAgent) KeepAlive(ctx context.Context) error {
 		return err
 	}
 
-	for r := range ka {
-		// log.Infof("KeepAlive: %d, ttl: %d\n", r.ID, r.TTL)
+	/*
+		for r := range ka {
+			// log.Infof("KeepAlive: %d, ttl: %d\n", r.ID, r.TTL)
+			log.Printf("KeepAlive: %d, ttl: %d", r.ID, r.TTL)
+		}
+	*/
+	select {
+	case r := <-ka:
 		log.Printf("KeepAlive: %d, ttl: %d", r.ID, r.TTL)
+	case <-ctx.Done():
+		break
 	}
 
 	return nil
