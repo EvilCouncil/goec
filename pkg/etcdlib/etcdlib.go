@@ -2,7 +2,8 @@ package etcdlib
 
 import (
 	"context"
-	"log"
+	"fmt"
+	"log/slog"
 	"time"
 
 	"go.etcd.io/etcd/client/v3"
@@ -48,7 +49,7 @@ func (ea *EtcdAgent) KeepAlive(ctx context.Context) error {
 	for running {
 		select {
 		case r := <-ka:
-			log.Printf("KeepAlive: %d, ttl: %d", r.ID, r.TTL)
+			slog.Info(fmt.Sprintf("KeepAlive: %d, ttl: %d", r.ID, r.TTL))
 		case <-ctx.Done():
 			running = false
 		}
