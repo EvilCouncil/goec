@@ -28,7 +28,7 @@ func TestEncode(t *testing.T) {
 				t.Fatal(err)
 			}
 			rr := httptest.NewRecorder()
-			encode(rr, req, http.StatusOK, []string{"foo", "bar"})
+			Encode(rr, req, http.StatusOK, []string{"foo", "bar"})
 
 			got := strings.TrimSpace(rr.Body.String())
 			if got != tc.want {
