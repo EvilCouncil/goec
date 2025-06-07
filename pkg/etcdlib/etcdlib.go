@@ -2,7 +2,6 @@ package etcdlib
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
 	"time"
 
@@ -14,6 +13,10 @@ type EtcdAgent struct {
 	Lease   clientv3.Lease
 	LeaseID clientv3.LeaseID
 }
+
+const (
+	defaultLeaseTime = 300
+)
 
 func NewEtcdAgent(ctx context.Context, servers []string) (*EtcdAgent, error) {
 	ea := new(EtcdAgent)
@@ -27,7 +30,7 @@ func NewEtcdAgent(ctx context.Context, servers []string) (*EtcdAgent, error) {
 	}
 
 	lease := clientv3.NewLease(cli)
-	lr, err := lease.Grant(ctx, 10)
+	lr, err := lease.Grant(ctx, defaultLeaseTime)
 	if err != nil {
 		return ea, err
 	}
@@ -49,7 +52,7 @@ func (ea *EtcdAgent) KeepAlive(ctx context.Context) error {
 	for running {
 		select {
 		case r := <-ka:
-			slog.Info(fmt.Sprintf("KeepAlive: %d, ttl: %d", r.ID, r.TTL))
+			slog.Info("KeepAlive:", "LeaseID", r.ID, "LeaseTTL", r.TTL)
 		case <-ctx.Done():
 			running = false
 		}
