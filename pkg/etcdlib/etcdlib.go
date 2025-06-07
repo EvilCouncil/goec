@@ -52,7 +52,7 @@ func (ea *EtcdAgent) KeepAlive(ctx context.Context) error {
 	for running {
 		select {
 		case r := <-ka:
-			slog.Info("KeepAlive:", "LeaseID", r.ID, "LeaseTTL", r.TTL)
+			slog.Info("KeepAlive", "LeaseID", r.ID, "LeaseTTL", r.TTL)
 		case <-ctx.Done():
 			running = false
 		}
